@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>HRN AI — Assistant IA & Studio de code</title>
+<style>
+:root{--bg:#090d18;--panel:#11182a;--panel2:#151e33;--line:#28344d;--text:#edf2ff;--muted:#9ba9c4;--accent:#8b7cff;--accent2:#53d6c7;--danger:#ffb4b4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top left,#192447 0,transparent 45%),var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:10px 13px;background:#1a2540;color:var(--text);transition:.15s}button:hover{border-color:#8075ff;transform:translateY(-1px)}button.primary{background:linear-gradient(135deg,#7566ff,#5d7cff);border:0;font-weight:700}button.ghost{background:transparent}button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+header{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid #222c43;background:#090d18e8;position:sticky;top:0;z-index:5;backdrop-filter:blur(14px)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#8877ff,#46d6c6);display:grid;place-items:center;color:#080d18;font-weight:900;font-size:18px}.brand small{display:block;font-weight:500;color:var(--muted);font-size:11px;letter-spacing:1.4px}
+.status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}.dot{width:8px;height:8px;border-radius:50%;background:#e9b45d;display:inline-block}
+main{max-width:1440px;margin:auto;padding:24px;display:grid;grid-template-columns:220px minmax(300px,1fr);gap:20px}.sidebar{display:flex;flex-direction:column;gap:8px}.navbtn{text-align:left;display:flex;gap:10px;align-items:center;background:transparent;border-color:transparent;color:#aeb9d1}.navbtn.active{background:#1b2440;border-color:#303d61;color:white}.sidebox{margin-top:18px;border:1px solid var(--line);border-radius:16px;padding:14px;color:var(--muted);font-size:12px;background:#101729}.sidebox strong{color:var(--text);display:block;margin-bottom:6px}
+.content{min-width:0}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:20px}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);font-weight:800}.hero h1{font-size:clamp(26px,3vw,38px);line-height:1.1;margin:7px 0}.hero p{color:var(--muted);margin:0;max-width:650px}.pill{font-size:11px;color:#c8c0ff;border:1px solid #554d93;background:#211d45;border-radius:99px;padding:6px 10px;white-space:nowrap}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tab{background:transparent;color:var(--muted)}.tab.active{background:#25204e;border-color:#5e53a8;color:white}
+.panel{background:linear-gradient(160deg,#121a2d,#0f1626);border:1px solid var(--line);border-radius:18px;overflow:hidden}.panelhead{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.panelhead strong{font-size:14px}.panelbody{padding:18px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}.fieldlabel{display:block;color:#c4cde0;font-size:12px;font-weight:700;margin:0 0 7px}input,textarea,select{width:100%;border:1px solid #2d3954;border-radius:11px;background:#0b1120;color:var(--text);padding:12px;outline:none}input:focus,textarea:focus,select:focus{border-color:#8075ff}textarea{resize:vertical;min-height:110px}select{margin-bottom:14px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:0 0 auto}.row .grow{flex:1 1 180px}.help{font-size:12px;color:var(--muted);margin-top:8px}
+.chatlog{height:390px;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px}.bubble{max-width:90%;padding:12px 14px;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere}.bubble.ai{align-self:flex-start;background:#19233a;border:1px solid #2c3955}.bubble.user{align-self:flex-end;background:#302b68;border:1px solid #5d55a2}.bubble .who{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#aab7d5;margin-bottom:5px;font-weight:800}.composer{padding:14px;border-top:1px solid var(--line);display:flex;gap:10px}.composer textarea{min-height:48px;height:48px;max-height:130px}.composer button{align-self:stretch}
+.editor{font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;min-height:360px;tab-size:2;white-space:pre;overflow:auto}.preview{width:100%;height:410px;background:white;border:0;display:block}.codehead{display:flex;gap:8px;align-items:center}.codehead select{width:auto;margin:0;padding:8px}.hidden{display:none!important}
+.tasklist{display:flex;flex-direction:column;gap:9px}.task{padding:12px;border:1px solid var(--line);border-radius:12px;background:#0c1323;display:flex;gap:10px;align-items:flex-start}.task input{width:auto;margin-top:4px}.task small{display:block;color:var(--muted);margin-top:3px}.notice{padding:12px 14px;border:1px solid #65542e;background:#2b2417;color:#f4d9a2;border-radius:12px;font-size:12px;margin-top:14px}.oknotice{padding:12px 14px;border:1px solid #245c58;background:#102b2a;color:#a8eee5;border-radius:12px;font-size:12px}
+.footer{color:#7886a3;font-size:11px;text-align:center;padding:24px 10px}
+@media(max-width:900px){main{grid-template-columns:1fr;padding:14px}.sidebar{flex-direction:row;overflow:auto}.navbtn{white-space:nowrap}.sidebox{display:none}.grid2{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}header{padding:0 14px}.status{display:none}}
+
+.image-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.image-result{min-height:260px;display:grid;place-items:center;background:#0b1120;border:1px dashed #3b4865;border-radius:14px;padding:12px;overflow:hidden}
+.image-result img{max-width:100%;max-height:520px;border-radius:10px}
+.image-preview{display:flex;gap:8px;flex-wrap:wrap;padding:0 14px 12px}
+.image-preview img{width:90px;height:90px;object-fit:cover;border-radius:10px;border:1px solid #394666}
+@media(max-width:760px){.image-tools{grid-template-columns:1fr}main{grid-template-columns:1fr;padding:14px}.sidebar{display:none}.hero{align-items:flex-start;flex-direction:column}}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">H</div><div>HRN AI <small>INTELLIGENCE STUDIO</small></div></div>
+  <div class="status"><span class="dot" id="statusDot"></span><span id="modelStatus">Modèle non chargé — prêt à démarrer</span></div>
+</header>
+<main>
+  <aside class="sidebar">
+    <button class="navbtn active" data-view="chat">✦ <span>Assistant IA</span></button>
+    <button class="navbtn" data-view="code">⌘ <span>Studio de code</span></button>
+    <button class="navbtn" data-view="agent">◈ <span>Agent de projet</span></button>
+    <div class="sidebox"><strong>Mode local</strong>Le modèle tourne dans ton navigateur lorsque ton appareil et le navigateur le permettent. Pas de clé API nécessaire.</div>
+    <div class="sidebox"><strong>À savoir</strong>Le site ne peut pas contrôler ton PC ni exécuter du code système automatiquement. Le mode agent prépare un plan et peut générer des fichiers web.</div>
+  </aside>
+  <section class="content">
+    <div class="hero"><div><div class="eyebrow">Ton copilote créatif</div><h1>Construis quelque chose<br>de remarquable.</h1><p>Discute, génère du code, teste des pages web et transforme une idée en plan de projet.</p></div><span class="pill">GRATUIT · MODE LOCAL</span></div>
+    <div class="tabs">
+      <button class="tab active" data-view="chat">Assistant</button><button class="tab" data-view="code">Code & aperçu</button><button class="tab" data-view="agent">Planificateur agent</button><button class="tab" data-view="images">Images</button>
+    </div>
+
+    <div id="view-chat" class="view">
+      <div class="panel">
+        <div class="panelhead"><strong>✦ Conversation HRN AI</strong><div class="row"><button id="loadModel" class="primary">Charger l’IA</button><button id="clearChat" class="ghost">Effacer</button></div></div>
+        <div id="chatlog" class="chatlog"><div class="bubble ai"><div class="who">HRN AI</div>Salut ! Je suis HRN AI. Je peux t’aider à réfléchir, apprendre, écrire du code ou préparer un projet. Clique sur « Charger l’IA » pour télécharger le modèle la première fois.</div></div>
+        <div class="image-preview" id="chatImagePreview"></div>
+        <div class="composer" style="flex-wrap:wrap">
+          <input id="chatImageInput" type="file" accept="image/*" multiple style="max-width:230px;padding:8px" aria-label="Joindre une image">
+          <textarea id="chatInput" placeholder="Écris ton message… (Ctrl + Entrée pour envoyer)" style="flex:1 1 240px"></textarea>
+          <button id="voiceChat" type="button" title="Parler à HRN AI">🎙️ Parler</button>
+          <button class="primary" id="sendChat">Envoyer ↗</button>
+        </div>
+        <p class="help" style="padding:0 14px 12px">Tu peux joindre des photos pour les afficher dans la conversation. Pour les analyser, un modèle de vision compatible est nécessaire. Demande « Génère une image de… » pour afficher une image directement dans le chat.</p>
+      </div>
+      <p class="help">Le modèle est téléchargé au premier lancement (connexion Internet requise). La vitesse dépend de ton appareil et de ton navigateur.</p>
+    </div>
+
+    <div id="view-code" class="view hidden">
+      <div class="grid2">
+        <div class="panel">
+          <div class="panelhead"><strong>⌘ Générateur de code</strong></div>
+          <div class="panelbody">
+            <label class="fieldlabel" for="codeGoal">Que veux-tu créer ?</label>
+            <textarea id="codeGoal" placeholder="Ex. : crée une page d'accueil moderne pour une boutique de vêtements avec un menu et une grille de produits."></textarea>
+            <label class="fieldlabel" for="codeLang" style="margin-top:14px">Type de projet</label>
+            <select id="codeLang"><option value="html">Site web (HTML/CSS/JavaScript)</option><option value="python">Python (code à copier)</option><option value="js">JavaScript</option></select>
+            <div class="row"><button id="generateCode" class="primary">Générer le code</button><button id="reviewCode">Corriger / relire le code</button><button id="starterCode">Exemple prêt à tester</button></div>
+            <p class="help">Pour un aperçu instantané, choisis « Site web ». Les autres langages sont affichés, mais ne sont pas exécutés ici.</p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panelhead"><strong>Aperçu de la page</strong><button id="refreshPreview">Actualiser</button></div>
+          <iframe id="preview" class="preview" sandbox="allow-scripts" title="Aperçu isolé du site généré"></iframe>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <div class="panelhead"><div class="codehead"><strong>Éditeur</strong><select id="editorLang"><option value="html">HTML</option><option value="python">Python</option><option value="javascript">JavaScript</option></select></div><div class="row"><button id="copyCode">Copier</button><button id="downloadCode" class="primary">Télécharger le fichier</button></div></div>
+        <div class="panelbody"><textarea id="codeEditor" class="editor" spellcheck="false" aria-label="Éditeur de code" placeholder="Ton code apparaîtra ici…"></textarea><div class="help" id="codeFeedback">Tu peux modifier le code manuellement puis actualiser l’aperçu.</div></div>
+      </div>
+    </div>
+
+    <div id="view-agent" class="view hidden">
+      <div class="panel">
+        <div class="panelhead"><strong>◈ Agent de projet HRN</strong><span class="pill">PLANIFIER → CRÉER → VÉRIFIER</span></div>
+        <div class="panelbody">
+          <label class="fieldlabel" for="projectGoal">Décris le projet à réaliser</label>
+          <textarea id="projectGoal" placeholder="Ex. : crée un site de portfolio pour un photographe, avec accueil, galerie, formulaire de contact et design mobile."></textarea>
+          <div class="row" style="margin-top:12px"><button id="planProject" class="primary">Préparer le plan</button><button id="createProject">Générer une première version web</button></div>
+          <div class="notice">Limite honnête : cet agent peut découper un projet en étapes, générer du code et préparer un fichier web. Il ne peut pas installer des logiciels, modifier librement les fichiers de ton PC, publier un site ou lancer des commandes système de lui-même.</div>
+          <div id="agentOutput" style="margin-top:18px"><p class="help">Ton plan et les étapes apparaîtront ici.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">HRN AI · Prototype personnel · Vérifie toujours le code avant de l’utiliser en production.</div>
+      <div id="view-images" class="view hidden">
+      <div class="panel">
+        <div class="panelhead"><strong>🎨 Studio d’images HRN AI</strong><span class="pill">Nécessite Internet</span></div>
+        <div class="panelbody">
+          <div class="image-tools">
+            <div>
+              <label class="fieldlabel" for="imagePrompt">Décris l’image que tu veux créer</label>
+              <textarea id="imagePrompt" placeholder="Ex. : un petit robot violet dans une ville futuriste, style illustration 3D, lumière douce…" style="min-height:150px"></textarea>
+              <label class="fieldlabel" for="imageStyle" style="margin-top:12px">Style</label>
+              <select id="imageStyle">
+                <option value="">Automatique</option><option value="photorealistic">Photorealiste</option>
+                <option value="digital art">Art numérique</option><option value="3D render">Rendu 3D</option>
+                <option value="anime illustration">Anime</option><option value="watercolor painting">Aquarelle</option>
+                <option value="pixel art">Pixel art</option>
+              </select>
+              <button id="generateImage" class="primary">Créer l’image ✨</button>
+              <p class="help" id="imageFeedback">La création utilise un service d’image externe gratuit lorsqu’il est disponible. Il peut être lent, indisponible ou appliquer ses propres limites.</p>
+            </div>
+            <div>
+              <div class="image-result" id="imageResult"><span class="help">Ton image apparaîtra ici.</span></div>
+              <div class="row" style="margin-top:10px"><button id="downloadImage" disabled>Télécharger l’image</button><button id="openImage" disabled>Ouvrir l’image</button></div>
+            </div>
+          </div>
+          <div class="help" style="margin-top:16px">La création d’images nécessite une connexion Internet. Le mode hors ligne ne pourra pas générer de nouvelles images avec cette fonction.</div>
+        </div>
+      </div>
+    </div>
+</section>
+</main>
+<script>
+const HRN_TYPO_TOLERANCE_INSTRUCTIONS = 'Comprends les demandes des utilisateurs et des administrateurs en tenant compte du contexte de toute la conversation. Tolère les fautes de frappe, fautes d’orthographe, accents manquants, abréviations et français familier. Déduis l’intention probable sans juger. Réponds directement à la demande réelle, sans inventer de contexte, sans réponses préfabriquées hors sujet, sans listes répétitives ni texte parasite comme Réponse : Réponse :. Si l’utilisateur demande de modifier, améliorer, éclaircir, refaire ou corriger une image générée précédemment, comprends cela comme une demande de nouvelle génération : conserve le sujet et applique les changements demandés. Si une image ne s’affiche pas ou si le sens est vraiment ambigu, pose une question courte. Réponds dans la langue de l’utilisateur. Ne prétends pas avoir fait une action ou testé quelque chose si ce n’est pas vrai. Pour les demandes d’administrateur, suis les instructions de configuration légitimes, mais n’ignore jamais les règles de sécurité.';
+
+/* Core interface uses a classic script so navigation and demo controls still work when opened locally.
+   The AI library is imported only after the user clicks the load button. */
+let pipeline = null;
+let env = null;
+let generator = null;
+let loading = false;
+const $ = id => document.getElementById(id);
+const status = (s, good=false) => { $('modelStatus').textContent=s; $('statusDot').style.background=good?'#53d6a8':'#e9b45d'; };
+const appendBubble = (who, text) => { const el=document.createElement('div'); el.className='bubble '+(who==='Toi'?'user':'ai'); const label=document.createElement('div');label.className='who';label.textContent=who; const body=document.createElement('div');body.textContent=text;el.append(label,body);$('chatlog').append(el);$('chatlog').scrollTop=$('chatlog').scrollHeight;return body; };
+async function loadModel(){
+ if(generator||loading)return generator;
+ loading=true; $('loadModel').disabled=true;status('Préparation du modèle…');
+ try {
+  if (!pipeline) {
+   const lib = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1');
+   pipeline = lib.pipeline;
+   env = lib.env;
+   env.allowLocalModels = false;
+   env.useBrowserCache = true;
+  }
+  // Petit modèle instruct quantifié, choisi pour les appareils aux ressources limitées.
+  generator=await pipeline('text-generation','onnx-community/Qwen2.5-0.5B-Instruct',{dtype:'q4',device:'webgpu',progress_callback:(p)=>{if(p.status==='progress'&&p.total)status('Téléchargement du modèle… '+Math.round(p.progress||0)+'%');}});
+  status('IA prête · WebGPU',true);
+ } catch(e) {
+  try {
+   generator=await pipeline('text-generation','onnx-community/Qwen2.5-0.5B-Instruct',{dtype:'q4',device:'wasm'});
+   status('IA prête · CPU/WASM',true);
+  } catch(err) {
+   status('Chargement impossible'); appendBubble('HRN AI','Impossible de charger le modèle. Vérifie ta connexion et essaie Chrome ou Edge à jour. Si tu as ouvert index.html directement, lance le site via http://localhost (voir README). Détail : '+(err?.message||e?.message||'erreur inconnue')); throw err;
+  }
+ } finally {loading=false;$('loadModel').disabled=false;$('loadModel').textContent=generator?'IA chargée':'Réessayer';}
+ return generator;
+}
+async function ask(prompt, system='Tu es HRN AI, un assistant utile, prudent, clair et rapide. '+HRN_TYPO_TOLERANCE_INSTRUCTIONS+' Réponds directement, sans longue introduction. Privilégie les réponses courtes et utiles ; développe seulement si l’utilisateur le demande. Pour une demande simple, réponds en quelques phrases. Pour le code, donne une solution complète mais évite les explications inutiles. Réponds dans la langue de l’utilisateur, en français naturel et avec une orthographe soignée quand l’utilisateur écrit en français. Relis ta réponse pour corriger les fautes, les répétitions et les phrases incomplètes. Si on te demande du code, fournis un exemple complet et expliqué. N’utilise pas de placeholders comme {css}, {html_content}, {js}, TODO ou « insérer ici ». Ne prétends jamais avoir exécuté ou testé du code si ce n’est pas le cas.'){
+ // Réponses instantanées aux salutations simples : ne charge pas le modèle pour « bonjour ».
+ const normalized=prompt.trim().toLocaleLowerCase('fr').replace(/[!?.，,;:]+$/g,'').trim();
+ if(/^(bonjour|bonsoir|salut|coucou|hello|hi|hey|salam|salam alaykoum|ça va|comment ça va|merci|merci beaucoup)$/.test(normalized)){
+   const replies={
+    'bonjour':'Bonjour ! 👋 Je suis HRN AI. Que veux-tu créer aujourd’hui ?',
+    'bonsoir':'Bonsoir ! 👋 Que puis-je faire pour toi ?',
+    'salut':'Salut ! 👋 Comment puis-je t’aider ?',
+    'coucou':'Coucou ! 😊 Que veux-tu faire aujourd’hui ?',
+    'hello':'Hello ! 👋 How can I help you today?',
+    'hi':'Hi! 👋 How can I help you today?',
+    'hey':'Hey! 👋 What would you like to build today?',
+    'salam':'Salam ! 👋 Comment puis-je t’aider ?',
+    'salam alaykoum':'Wa alaykoum salam ! 👋 Comment puis-je t’aider ?',
+    'ça va':'Ça va bien, merci ! 😊 Et toi ?',
+    'comment ça va':'Je vais bien, merci ! 😊 Comment puis-je t’aider ?',
+    'merci':'Avec plaisir ! 😊',
+    'merci beaucoup':'Avec plaisir ! 😊'
+   };
+   return replies[normalized] || 'Bonjour ! Comment puis-je t’aider ?';
+ }
+ const model=await loadModel();
+ const result=await model([{role:'system',content:system},{role:'user',content:prompt}],{max_new_tokens:220,temperature:0.3,do_sample:false});
+ const out=result?.[0]?.generated_text;
+ if(Array.isArray(out)){const last=out.filter(x=>x.role==='assistant').pop();return last?.content||JSON.stringify(out);}
+ return typeof out==='string'?out:String(out||'Je n’ai pas pu produire de réponse.');
+}
+$('loadModel').addEventListener('click',()=>loadModel().catch(()=>{}));
+$('clearChat').addEventListener('click',()=>{$('chatlog').innerHTML='';appendBubble('HRN AI','Conversation effacée. Que veux-tu faire ?');});
+let lastGeneratedImagePrompt='';
+async function sendChat(){
+ const text=$('chatInput').value.trim();
+ if(!text && !selectedChatImages.length)return;
+ $('chatInput').value='';
+ if(text)appendBubble('Toi',text);
+ const attached=selectedChatImages.slice();
+ if(attached.length){
+   const el=document.createElement('div');el.className='bubble user';
+   const who=document.createElement('div');who.className='who';who.textContent='Photos envoyées';
+   el.appendChild(who);
+   const wrap=document.createElement('div');wrap.style.cssText='display:flex;gap:8px;flex-wrap:wrap';
+   attached.forEach(item=>{const img=document.createElement('img');img.src=item.url;img.alt=item.file.name;img.style.cssText='max-width:180px;max-height:180px;object-fit:contain;border-radius:10px';wrap.appendChild(img);});
+   el.appendChild(wrap);$('chatlog').append(el);$('chatlog').scrollTop=$('chatlog').scrollHeight;
+   selectedChatImages=[];if(imagePreview)imagePreview.innerHTML='';if(imageInput)imageInput.value='';
+ }
+ const target=appendBubble('HRN AI','Je réfléchis…');$('sendChat').disabled=true;
+ try{
+   const wantsImage=/(g[eé]n[eè]re|cr[eé]e|dessine|fabrique|produis).{0,45}(image|photo|illustration|dessin|portrait|paysage|logo)|\b(image|dessin)\b.{0,30}(de|du|des|avec)/i.test(text);
+   if(wantsImage){
+     target.textContent='Je crée ton image…';
+     const url='https://image.pollinations.ai/prompt/'+encodeURIComponent(text+', high quality digital art')+'?width=1024&height=1024&nologo=true';
+     const img=document.createElement('img');img.alt='Image générée par HRN AI';img.style.cssText='display:block;max-width:100%;width:560px;border-radius:12px;margin-top:8px';img.referrerPolicy='no-referrer';
+     img.onerror=()=>{target.textContent='Le service de génération d’images est indisponible pour le moment. Vérifie Internet et réessaie.';};
+     target.textContent='Voici la génération demandée :';target.appendChild(document.createElement('br'));target.appendChild(img);img.src=url;
+   } else if(attached.length){
+     target.textContent='J’ai reçu tes photos et je les affiche dans la conversation. Attention : le modèle local actuel ne sait pas encore analyser le contenu des images. Pour que HRN AI les comprenne, il faudra connecter un modèle de vision compatible.';
+   } else {
+     target.textContent=await ask(text);
+   }
+ }catch(e){target.textContent='Je n’ai pas pu répondre. Vérifie la connexion et réessaie.';}
+ finally{$('sendChat').disabled=false;}
+}
+$('sendChat').addEventListener('click',sendChat);
+$('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();sendChat();}});
+function switchView(view){document.querySelectorAll('.view').forEach(el=>el.classList.toggle('hidden',el.id!=='view-'+view));document.querySelectorAll('[data-view]').forEach(el=>el.classList.toggle('active',el.dataset.view===view));}
+document.querySelectorAll('[data-view]').forEach(el=>el.addEventListener('click',()=>switchView(el.dataset.view)));
+function extractCode(text, lang){const match=text.match(/```(?:html|HTML|javascript|js|python|css)?\s*([\s\S]*?)```/);return match?match[1].trim():text.trim();}
+function updatePreview(){
+ const code=$('codeEditor').value;
+ $('preview').srcdoc=$('editorLang').value==='html'?code:'<html><body style="font-family:system-ui;padding:2rem"><h2>Aperçu non disponible</h2><p>L’aperçu intégré prend en charge le HTML. Le code peut être téléchargé ou copié.</p></body></html>';
+}
+// Aperçu des images jointes (le modèle actuel ne sait pas analyser leur contenu).
+let selectedChatImages=[];
+const imageInput=$('chatImageInput');
+const imagePreview=$('chatImagePreview');
+if(imageInput&&imagePreview){imageInput.addEventListener('change',()=>{
+ selectedChatImages.forEach(x=>URL.revokeObjectURL(x.url));
+ selectedChatImages=Array.from(imageInput.files||[]).slice(0,4).map(file=>({file,url:URL.createObjectURL(file)}));
+ imagePreview.innerHTML='';
+ selectedChatImages.forEach(item=>{const img=document.createElement('img');img.src=item.url;img.alt='Image jointe';img.title=item.file.name;imagePreview.appendChild(img);});
+ if((imageInput.files||[]).length>4){const note=document.createElement('p');note.className='help';note.textContent='Maximum 4 images à la fois.';imagePreview.appendChild(note);}
+});}
+const sendButtonForImages=$('sendChat');
+if(sendButtonForImages){sendButtonForImages.addEventListener('click',()=>{
+ if(!selectedChatImages.length)return;
+ const names=selectedChatImages.map(x=>x.file.name).join(', ');
+ appendBubble('Images jointes',names+' — aperçu seulement : le modèle actuel ne peut pas analyser leur contenu.');
+ selectedChatImages.forEach(x=>URL.revokeObjectURL(x.url));selectedChatImages=[];
+ if(imagePreview)imagePreview.innerHTML='';if(imageInput)imageInput.value='';
+});}
+let currentGeneratedImageUrl='';
+const generateImageButton=$('generateImage');
+if(generateImageButton){generateImageButton.addEventListener('click',()=>{
+ const prompt=$('imagePrompt').value.trim(),style=$('imageStyle').value,feedback=$('imageFeedback'),result=$('imageResult');
+ if(!prompt){feedback.textContent='Écris une description avant de créer l’image.';return;}
+ currentGeneratedImageUrl='https://image.pollinations.ai/prompt/'+encodeURIComponent([prompt,style].filter(Boolean).join(', '))+'?width=1024&height=1024&nologo=true';
+ feedback.textContent='Chargement de l’image…';result.innerHTML='';
+ const img=document.createElement('img');img.alt='Image générée';img.referrerPolicy='no-referrer';
+ img.onload=()=>{feedback.textContent='Image reçue. Tu peux la télécharger ou l’ouvrir.';$('downloadImage').disabled=false;$('openImage').disabled=false;};
+ img.onerror=()=>{feedback.textContent='Échec du service d’image. Vérifie Internet et réessaie.';$('downloadImage').disabled=true;$('openImage').disabled=true;};
+ result.appendChild(img);img.src=currentGeneratedImageUrl;
+});}
+$('openImage')?.addEventListener('click',()=>{if(currentGeneratedImageUrl)window.open(currentGeneratedImageUrl,'_blank','noopener');});
+$('downloadImage')?.addEventListener('click',async()=>{if(!currentGeneratedImageUrl)return;try{const r=await fetch(currentGeneratedImageUrl);if(!r.ok)throw Error();const blob=await r.blob(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='hrn-ai-image.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);}catch(e){$('imageFeedback').textContent='Téléchargement bloqué : clique sur « Ouvrir l’image », puis enregistre-la depuis Edge.';}});
+$('refreshPreview').addEventListener('click',updatePreview);
+$('editorLang').addEventListener('change',updatePreview);
+$('generateCode').addEventListener('click',async()=>{
+ const goal=$('codeGoal').value.trim();
+ if(!goal){$('codeFeedback').textContent='Écris d’abord ce que tu veux créer dans le champ au-dessus.';return;}
+ const lang=$('codeLang').value;
+ const prompts={html:'Écris un vrai fichier HTML complet et autonome, avec le CSS dans une balise <style> et le JavaScript dans une balise <script>. N’utilise AUCUN espace réservé ni variable de modèle comme {css}, {html_content}, {js}, {{...}}, TODO ou « insérer le code ici ». Écris réellement tout le contenu nécessaire. Réponds UNIQUEMENT avec le code HTML complet dans un bloc ```html. Projet : ',python:'Écris un script Python complet et commenté, pas de pseudocode ni de variables de remplacement comme {code}. Réponds avec le code dans un bloc ```python. Projet : ',js:'Écris un fichier JavaScript complet et exécutable, pas de pseudocode ni de variables de remplacement comme {code}. Réponds avec le code dans un bloc ```javascript. Projet : '};
+ $('generateCode').disabled=true;
+ $('codeFeedback').textContent='Clic reçu. Tentative de chargement du modèle IA…';
+ try {
+   const out=await ask(prompts[lang]+goal,'Tu es un développeur senior et relecteur méticuleux. Produis du code complet, cohérent, lisible et raisonnablement sûr. Vérifie mentalement les balises, les guillemets, les variables et les événements des boutons. N’utilise aucun placeholder. Réponds uniquement avec le code demandé. Ne dis pas que le code a été exécuté ou testé.');
+   const generated=extractCode(out,lang);
+   const hasPlaceholders=/\{\s*(css|html_content|js|html|javascript|code)\s*\}/i.test(generated);
+   const looksLikeHtml=/<html[\s>]|<!doctype html|<body[\s>]/i.test(generated);
+   if(lang==='html' && (hasPlaceholders || !looksLikeHtml)){
+     $('codeEditor').value=generated;
+     $('editorLang').value='html';
+     updatePreview();
+     $('codeFeedback').textContent='Le modèle a renvoyé un résultat incomplet (espaces réservés ou HTML manquant). Essaie une demande plus simple ou relance la génération. Le petit modèle peut avoir des limites.';
+   } else {
+     $('codeEditor').value=generated;
+     $('editorLang').value=lang==='js'?'javascript':lang;
+     updatePreview();
+     $('codeFeedback').textContent='Code généré par l’IA. Relis-le et teste les fonctions importantes.';
+   }
+ } catch(e) {
+   if(lang==='html') {
+     const safeGoal=goal.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+     $('codeEditor').value=[
+       '<!doctype html>',
+       '<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">',
+       '<title>Mon projet</title>',
+       '<style>body{font-family:system-ui;margin:0;padding:3rem;background:#10152b;color:#f5f6ff}main{max-width:760px;margin:auto}h1{color:#9d91ff}button{padding:12px 18px;border:0;border-radius:10px;background:#8b7cff;color:white;cursor:pointer}</style>',
+       '</head><body><main><h1>Mon projet web</h1><p>Objectif : '+safeGoal+'</p>',
+       '<p>Le modèle IA n’a pas pu se charger. Voici une page de départ fonctionnelle que tu peux modifier.</p>',
+       '<button id="testBtn">Tester le bouton</button><p id="msg"></p>',
+       '<script>document.getElementById("testBtn").addEventListener("click",function(){document.getElementById("msg").textContent="Le bouton fonctionne !";});<\\/script>',
+       '</main></body></html>'
+     ].join('\\n');
+     $('editorLang').value='html'; updatePreview();
+     $('codeFeedback').textContent='Le modèle IA n’a pas répondu (connexion ou navigateur). Une page de départ a été créée pour vérifier que le générateur fonctionne. Détail : '+(e?.message||'erreur inconnue');
+   } else {
+     $('codeFeedback').textContent='Le modèle IA n’a pas pu se charger. Essaie avec Chrome/Edge et une connexion Internet. Détail : '+(e?.message||'erreur inconnue');
+   }
+ } finally {$('generateCode').disabled=false;}
+});
+$('reviewCode').addEventListener('click',async()=>{
+ const code=$('codeEditor').value.trim();
+ if(!code){$('codeFeedback').textContent='Colle ou génère d’abord du code dans l’éditeur.';return;}
+ $('reviewCode').disabled=true;$('codeFeedback').textContent='Relecture du code en cours…';
+ try{
+  const lang=$('editorLang').value;
+  const prompt=('Relis ce code. Repère les erreurs probables, les problèmes de syntaxe, les placeholders et les fautes dans les textes visibles. Retourne le code corrigé complet dans un bloc ```'+(lang==='html'?'html':lang==='python'?'python':'javascript')+'```, puis une courte liste des corrections. Précise que c’est une vérification statique, pas une exécution. Code :\\n'+code) + '\n\n' + HRN_TYPO_TOLERANCE_INSTRUCTIONS;
+  const out=await ask(prompt,'Tu es un relecteur de code rigoureux. Corrige les fautes de français visibles et garde le comportement attendu. Évite les placeholders. Ne prétends pas avoir exécuté le code.');
+  const fixed=extractCode(out,lang);
+  if(fixed&&fixed.length>10){$('codeEditor').value=fixed;updatePreview();$('codeFeedback').textContent='Version relue affichée. Vérifie-la : cette relecture ne garantit pas l’absence de bugs.';}
+  else $('codeFeedback').textContent='La relecture n’a pas fourni de code exploitable. Réessaie avec une demande plus courte.';
+ }catch(e){$('codeFeedback').textContent='La relecture IA a échoué. Vérifie que le modèle est chargé et connecté.';}
+ finally{$('reviewCode').disabled=false;}
+});
+$('starterCode').addEventListener('click',()=>{$('editorLang').value='html';$('codeLang').value='html';$('codeEditor').value=`<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon premier site</title>
+<style>
+body{margin:0;font-family:system-ui;background:#10152b;color:#f5f6ff;display:grid;place-items:center;min-height:100vh;text-align:center}
+main{max-width:680px;padding:40px}h1{font-size:clamp(2rem,6vw,4rem)}p{color:#b9c4e0;line-height:1.7}
+button{border:0;border-radius:12px;padding:12px 18px;background:#8b7cff;color:#fff;font-weight:bold;cursor:pointer}
+</style>
+</head>
+<body><main><p>BIENVENUE</p><h1>Mon premier site web ✨</h1><p>Modifie ce fichier pour créer ta propre expérience.</p><button id="demoButton" type="button">Clique ici</button><p id="demoMessage" aria-live="polite"></p><script>document.getElementById('demoButton').addEventListener('click',function(){document.getElementById('demoMessage').textContent='Bravo ! Le bouton fonctionne correctement.';this.textContent='Ça marche ✓';});<\/script></main></body>
+</html>`;updatePreview();$('codeFeedback').textContent='Exemple chargé : modifie le code puis actualise l’aperçu.';});
+$('copyCode').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('codeEditor').value);$('codeFeedback').textContent='Code copié.';}catch(e){$('codeFeedback').textContent='Copie bloquée par le navigateur. Sélectionne le code manuellement.';}});
+$('downloadCode').addEventListener('click',()=>{const lang=$('editorLang').value;const ext=lang==='html'?'html':lang==='python'?'py':'js';const blob=new Blob([$('codeEditor').value],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='hrn-ai-projet.'+ext;a.click();URL.revokeObjectURL(url);});
+$('planProject').addEventListener('click',async()=>{const goal=$('projectGoal').value.trim();if(!goal){$('agentOutput').textContent='Décris ton projet avant de demander un plan.';return;}const out=$('agentOutput');out.textContent='Préparation du plan…';try{const plan=await ask('Pour ce projet, fournis un plan pratique pour un débutant : objectifs, pages/fonctionnalités, fichiers à créer, étapes numérotées, tests et limites. Pas de prétendue exécution. Projet : '+goal,'Tu es un chef de projet logiciel pédagogue. Réponds en français simple avec un plan réaliste, sans supposer que tu peux agir sur le PC.');out.textContent=plan;}catch(e){out.textContent='Échec. Vérifie que le modèle est chargé et réessaie.';}});
+$('createProject').addEventListener('click',()=>{const goal=$('projectGoal').value.trim();if(!goal){$('agentOutput').textContent='Décris ton projet avant de continuer.';return;}switchView('code');$('codeLang').value='html';$('codeGoal').value='Crée une première version complète, moderne, responsive et accessible de ce projet. Mets tout dans un seul fichier HTML avec CSS et JavaScript intégrés. Projet : '+goal;$('codeFeedback').textContent='Clique sur « Générer le code » pour créer la première version.';$('codeGoal').focus();});
+
+// Commande vocale : utilise la reconnaissance vocale du navigateur (Internet généralement nécessaire).
+(function setupVoiceChat(){
+ const btn=document.getElementById('voiceChat');
+ const input=document.getElementById('chatInput');
+ if(!btn||!input)return;
+ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SpeechRecognition){
+   btn.title='La reconnaissance vocale n’est pas prise en charge par ce navigateur.';
+   btn.addEventListener('click',()=>alert('La commande vocale n’est pas prise en charge ici. Essaie Microsoft Edge à jour et autorise le microphone.'));
+   return;
+ }
+ let recognition=null, listening=false;
+ btn.addEventListener('click',()=>{
+   if(listening){try{recognition.stop()}catch(e){};return;}
+   recognition=new SpeechRecognition();
+   recognition.lang='fr-FR';
+   recognition.interimResults=true;
+   recognition.continuous=false;
+   recognition.onstart=()=>{listening=true;btn.textContent='🔴 Écoute…';btn.setAttribute('aria-pressed','true');};
+   recognition.onresult=(event)=>{
+     let transcript='';
+     for(let i=0;i<event.results.length;i++)transcript+=event.results[i][0].transcript;
+     input.value=transcript;
+   };
+   recognition.onerror=(event)=>{btn.textContent='🎙️ Parler';listening=false;btn.removeAttribute('aria-pressed');alert(event.error==='not-allowed'?'Autorise le microphone dans Edge pour utiliser la commande vocale.':'La reconnaissance vocale a échoué. Vérifie Internet et les autorisations du microphone.');};
+   recognition.onend=()=>{listening=false;btn.textContent='🎙️ Parler';btn.removeAttribute('aria-pressed');input.focus();};
+   try{recognition.start()}catch(e){alert('Impossible de démarrer le microphone. Vérifie ses autorisations dans Edge.');}
+ });
+})();
+
+</script>
+</body>
+</html>
