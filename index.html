@@ -157,7 +157,7 @@ async function loadModel(){
    env.useBrowserCache = true;
   }
   // Petit modèle instruct quantifié, choisi pour les appareils aux ressources limitées.
-  generator=await pipeline('text-generation','onnx-community/Qwen2.5-0.5B-Instruct',{dtype:'q4',device:'webgpu',progress_callback:(p)=>{if(p.status==='progress'&&p.total)status('Téléchargement du modèle… '+Math.round(p.progress||0)+'%');}});
+  generator=await pipeline('text-generation','onnx-community/Qwen2.5-0.5B-Instruct',{dtype:'q4',device:'webgpu',progress_callback:(p)=>{if(p.status==='progress'&&p.total)status(''+Math.round(p.progress||0)+'%');}});
   status('IA prête · WebGPU',true);
  } catch(e) {
   try {
@@ -190,14 +190,17 @@ async function ask(prompt, system='Tu es HRN AI, un assistant utile, prudent, cl
    };
    return replies[normalized] || 'Bonjour ! Comment puis-je t’aider ?';
  }
- const model=await loadModel();
- const result=await model([{role:'system',content:system},{role:'user',content:prompt}],{max_new_tokens:220,temperature:0.3,do_sample:false});
- const out=result?.[0]?.generated_text;
- if(Array.isArray(out)){const last=out.filter(x=>x.role==='assistant').pop();return last?.content||JSON.stringify(out);}
- return typeof out==='string'?out:String(out||'Je n’ai pas pu produire de réponse.');
+ // Mode sans téléchargement : réponses simples intégrées au site.
+ if (/(code|html|css|javascript|site web|site internet|page web)/i.test(prompt)) {
+   return "Je peux t’aider à préparer un site ou du code, mais le mode sans téléchargement ne contient pas de grand modèle d’IA. Pour générer des réponses libres comme ChatGPT sans télécharger de modèle, il faut connecter un service d’IA en ligne avec une clé API.";
+ }
+ if (/(image|photo|dessin|illustration)/i.test(prompt)) {
+   return "Pour créer ou analyser des images, il faut connecter un service d’IA en ligne. Cette version ne télécharge aucun modèle et n’envoie aucune image à un service externe.";
+ }
+ return "Je suis ouvert et prêt, sans téléchargement de modèle. Pour répondre à toutes sortes de questions comme une vraie IA, il faut connecter un service d’IA en ligne (API). Les réponses automatiques intégrées sont limitées dans cette version.";
 }
-// Démarrage automatique : aucun bouton « Charger l’IA » nécessaire.
-window.addEventListener('load',()=>{setTimeout(()=>loadModel().catch(()=>{}),250);});
+// Mode sans téléchargement : l’interface est prête dès l’ouverture.
+window.addEventListener('load',()=>{status('Prêt · aucun modèle à télécharger',true);});
 $('clearChat').addEventListener('click',()=>{$('chatlog').innerHTML='';appendBubble('HRN AI','Conversation effacée. Que veux-tu faire ?');});
 let lastGeneratedImagePrompt='';
 async function sendChat(){
