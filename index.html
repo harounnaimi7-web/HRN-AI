@@ -35,7 +35,7 @@ main{max-width:1440px;margin:auto;padding:24px;display:grid;grid-template-column
 <body>
 <header>
   <div class="brand"><div class="logo">H</div><div>HRN AI <small>INTELLIGENCE STUDIO</small></div></div>
-  <div class="status"><span class="dot" id="statusDot"></span><span id="modelStatus">Modèle non chargé — prêt à démarrer</span></div>
+  <div class="status"><span class="dot" id="statusDot"></span><span id="modelStatus">Démarrage automatique de l’IA…</span></div>
 </header>
 <main>
   <aside class="sidebar">
@@ -53,7 +53,7 @@ main{max-width:1440px;margin:auto;padding:24px;display:grid;grid-template-column
 
     <div id="view-chat" class="view">
       <div class="panel">
-        <div class="panelhead"><strong>✦ Conversation HRN AI</strong><div class="row"><button id="loadModel" class="primary">Charger l’IA</button><button id="clearChat" class="ghost">Effacer</button></div></div>
+        <div class="panelhead"><strong>✦ Conversation HRN AI</strong><div class="row"><button id="clearChat" class="ghost">Effacer</button></div></div>
         <div id="chatlog" class="chatlog"><div class="bubble ai"><div class="who">HRN AI</div>Salut ! Je suis HRN AI. Je peux t’aider à réfléchir, apprendre, écrire du code ou préparer un projet. Clique sur « Charger l’IA » pour télécharger le modèle la première fois.</div></div>
         <div class="image-preview" id="chatImagePreview"></div>
         <div class="composer" style="flex-wrap:wrap">
@@ -147,7 +147,7 @@ const status = (s, good=false) => { $('modelStatus').textContent=s; $('statusDot
 const appendBubble = (who, text) => { const el=document.createElement('div'); el.className='bubble '+(who==='Toi'?'user':'ai'); const label=document.createElement('div');label.className='who';label.textContent=who; const body=document.createElement('div');body.textContent=text;el.append(label,body);$('chatlog').append(el);$('chatlog').scrollTop=$('chatlog').scrollHeight;return body; };
 async function loadModel(){
  if(generator||loading)return generator;
- loading=true; $('loadModel').disabled=true;status('Préparation du modèle…');
+ loading=true; const loadBtn=$('loadModel'); if(loadBtn)loadBtn.disabled=true;status('Préparation automatique du modèle…');
  try {
   if (!pipeline) {
    const lib = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1');
@@ -166,7 +166,7 @@ async function loadModel(){
   } catch(err) {
    status('Chargement impossible'); appendBubble('HRN AI','Impossible de charger le modèle. Vérifie ta connexion et essaie Chrome ou Edge à jour. Si tu as ouvert index.html directement, lance le site via http://localhost (voir README). Détail : '+(err?.message||e?.message||'erreur inconnue')); throw err;
   }
- } finally {loading=false;$('loadModel').disabled=false;$('loadModel').textContent=generator?'IA chargée':'Réessayer';}
+ } finally {loading=false; const loadBtn=$('loadModel'); if(loadBtn){loadBtn.disabled=false;loadBtn.textContent=generator?'IA chargée':'Réessayer';}}
  return generator;
 }
 async function ask(prompt, system='Tu es HRN AI, un assistant utile, prudent, clair et rapide. '+HRN_TYPO_TOLERANCE_INSTRUCTIONS+' Réponds directement, sans longue introduction. Privilégie les réponses courtes et utiles ; développe seulement si l’utilisateur le demande. Pour une demande simple, réponds en quelques phrases. Pour le code, donne une solution complète mais évite les explications inutiles. Réponds dans la langue de l’utilisateur, en français naturel et avec une orthographe soignée quand l’utilisateur écrit en français. Relis ta réponse pour corriger les fautes, les répétitions et les phrases incomplètes. Si on te demande du code, fournis un exemple complet et expliqué. N’utilise pas de placeholders comme {css}, {html_content}, {js}, TODO ou « insérer ici ». Ne prétends jamais avoir exécuté ou testé du code si ce n’est pas le cas.'){
@@ -196,7 +196,8 @@ async function ask(prompt, system='Tu es HRN AI, un assistant utile, prudent, cl
  if(Array.isArray(out)){const last=out.filter(x=>x.role==='assistant').pop();return last?.content||JSON.stringify(out);}
  return typeof out==='string'?out:String(out||'Je n’ai pas pu produire de réponse.');
 }
-$('loadModel').addEventListener('click',()=>loadModel().catch(()=>{}));
+// Démarrage automatique : aucun bouton « Charger l’IA » nécessaire.
+window.addEventListener('load',()=>{setTimeout(()=>loadModel().catch(()=>{}),250);});
 $('clearChat').addEventListener('click',()=>{$('chatlog').innerHTML='';appendBubble('HRN AI','Conversation effacée. Que veux-tu faire ?');});
 let lastGeneratedImagePrompt='';
 async function sendChat(){
